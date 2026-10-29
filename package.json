@@ -1,0 +1,76 @@
+{
+  "name": "liu2nd-fish",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Liu2nd_Fish - small floating web browser with customizable advertising-style skins",
+  "main": "src/main.js",
+  "author": "Liu2nd_Fish contributors",
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/core/config.js && node --check src/core/shortcuts.js && node --check src/core/layout.js && node --check src/ui/main.js && node --check src/ui/editor.js",
+    "dist:win": "electron-builder --win portable nsis --x64",
+    "dist:win32": "electron-builder --win portable --ia32",
+    "dist:mac": "electron-builder --mac dmg --universal",
+    "dist:linux": "electron-builder --linux AppImage --x64",
+    "dist:win-arm64": "electron-builder --win portable --arm64"
+  },
+  "devDependencies": {
+    "electron": "43.8.4",
+    "electron-builder": "26.18.0"
+  },
+  "build": {
+    "appId": "com.liu2nd.fish",
+    "productName": "Liu2nd_Fish",
+    "asar": true,
+    "files": [
+      "src/**/*",
+      "assets/**/*",
+      "package.json",
+      "README.md"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        },
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "portable": {
+      "artifactName": "Liu2nd_Fish-${version}-Windows-${arch}-Portable.${ext}"
+    },
+    "nsis": {
+      "artifactName": "Liu2nd_Fish-${version}-Windows-${arch}-Setup.${ext}",
+      "oneClick": false
+    },
+    "mac": {
+      "icon": "assets/icon.png",
+      "target": [
+        "dmg"
+      ]
+    },
+    "linux": {
+      "icon": "assets/icon.png",
+      "target": [
+        "AppImage"
+      ],
+      "category": "Utility"
+    }
+  }
+}
