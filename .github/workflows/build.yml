@@ -1,0 +1,127 @@
+name: 制作 Liu2nd_Fish 免安装软件
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: '要制作的平台（默认 Windows 64 位）'
+        required: true
+        default: windows-x64
+        type: choice
+        options:
+          - windows-x64
+          - windows-x86
+          - windows-arm64
+          - macos
+          - linux
+          - all
+
+permissions:
+  contents: read
+
+jobs:
+  windows-x64:
+    if: github.event_name == 'push' || inputs.platform == 'windows-x64' || inputs.platform == 'all'
+    name: Windows 64 位免安装版和安装版
+    runs-on: windows-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: 安装云端打包依赖
+        run: npm install --no-audit --no-fund
+      - name: 验证源码及单元测试
+        run: |
+          npm run check
+          npm test
+      - name: 制作 Windows EXE
+        run: npm run dist:win
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liu2nd_Fish-Windows-x64
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
+
+  windows-x86:
+    if: github.event_name == 'workflow_dispatch' && (inputs.platform == 'windows-x86' || inputs.platform == 'all')
+    name: Windows 32 位兼容版
+    runs-on: windows-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-audit --no-fund
+      - run: npm run check && npm test
+      - run: npm run dist:win32
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liu2nd_Fish-Windows-x86
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
+
+  windows-arm64:
+    if: github.event_name == 'workflow_dispatch' && (inputs.platform == 'windows-arm64' || inputs.platform == 'all')
+    name: Windows ARM64 便携版
+    runs-on: windows-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-audit --no-fund
+      - run: npm run check && npm test
+      - run: npm run dist:win-arm64
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liu2nd_Fish-Windows-arm64
+          path: dist/*.exe
+          if-no-files-found: error
+          retention-days: 30
+
+  macos:
+    if: github.event_name == 'workflow_dispatch' && (inputs.platform == 'macos' || inputs.platform == 'all')
+    name: macOS DMG
+    runs-on: macos-latest
+    env:
+      CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-audit --no-fund
+      - run: npm run check && npm test
+      - run: npm run dist:mac
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liu2nd_Fish-macOS
+          path: dist/*.dmg
+          if-no-files-found: error
+          retention-days: 30
+
+  linux:
+    if: github.event_name == 'workflow_dispatch' && (inputs.platform == 'linux' || inputs.platform == 'all')
+    name: Linux AppImage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install --no-audit --no-fund
+      - run: npm run check && npm test
+      - run: npm run dist:linux
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Liu2nd_Fish-Linux-x64
+          path: dist/*.AppImage
+          if-no-files-found: error
+          retention-days: 30
