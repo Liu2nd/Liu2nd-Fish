@@ -11,11 +11,11 @@
     "dev": "electron .",
     "test": "node --test tests/*.test.js",
     "check": "node --check src/main.js && node --check src/preload.js && node --check src/core/config.js && node --check src/core/shortcuts.js && node --check src/core/layout.js && node --check src/ui/main.js && node --check src/ui/editor.js",
-    "dist:win": "electron-builder --win portable nsis --x64",
-    "dist:win32": "electron-builder --win portable --ia32",
-    "dist:mac": "electron-builder --mac dmg --universal",
-    "dist:linux": "electron-builder --linux AppImage --x64",
-    "dist:win-arm64": "electron-builder --win portable --arm64"
+    "dist:win": "electron-builder --win portable nsis --x64 --publish never",
+    "dist:win32": "electron-builder --win portable --ia32 --publish never",
+    "dist:mac": "electron-builder --mac dmg --universal --publish never",
+    "dist:linux": "electron-builder --linux AppImage --x64 --publish never",
+    "dist:win-arm64": "electron-builder --win portable --arm64 --publish never"
   },
   "devDependencies": {
     "electron": "43.8.4",
