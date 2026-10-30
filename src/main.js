@@ -16,7 +16,7 @@ let quitting = false;
 let latestBrowserUrl = '';
 let recordingShortcuts = false;
 let shortcutStatus = {};
-const SHORTCUT_CALLBACKS = { toggleWindow: toggleMain, toggleMute, openSettings };
+const SHORTCUT_CALLBACKS = { toggleWindow: toggleMain, toggleMute, openSettings: openEditor };
 const statePath = () => path.join(app.getPath('userData'), 'settings.json');
 const defaultSkinPath = () => path.join(__dirname, '..', 'assets', 'default-skin.png');
 
